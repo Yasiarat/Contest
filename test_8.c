@@ -73,7 +73,27 @@ void dif(int a[], int b[], int mx) {
 
 // умножение
 void mult(int a[], int b[], int mx) {
-    
+    int res[20001] = {0};
+    int i = 0, j = 0;
+    int tem = 0, flag  = 0, cnt = 0;
+
+    for (i = 0; i < mx; i++) {
+        for (j = 0; j < mx; j++) {
+            res[20000 - j - cnt] += (a[mx - i - 1] * b[mx - j - 1] + tem) % 10; //printf("%d", (a[mx - i - 1] * b[mx - i - 1]) / 10);
+            tem = (a[mx - i - 1] * b[mx - j - 1] + tem) / 10;
+        }
+        
+        cnt++;
+    }
+    for (i = 0; i < 20001; i++){
+            if (res[i] != 0) {
+                if (tem != 0) printf("%d", tem);
+                    flag = 1;
+            if (flag == 1)printf("%d", res[i]);
+
+    }
+
+}
 }
 
 int main(void)
@@ -82,6 +102,7 @@ int main(void)
     int n = 0;
     int e_a = 0, e_b = 0;
     char str[20001];
+
     char ex = '0';
     int i = 0, j = 0;
 
@@ -118,7 +139,7 @@ int main(void)
         for (i = e_b - e_a - 1; i >= 0; i--) a[i] = 0;
     }
 
-    dif(a, b, mx);
+    mult(a, b, mx);
     /*
     for (i = 0; i < mx; i++) {
         printf("%d", a[i]);
