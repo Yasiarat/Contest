@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+/*Чушкина Маргарита 105 06-14*/
+
+int main(int argc, char ** argv) {
+    FILE * finp = fopen("matrix.in", "rb");
+    FILE * fout = fopen("trace.out", "wb");
+
+    unsigned int tmp_size = 0;
+    unsigned char buf = 0;
+    fread(&buf, 1, 1, finp);
+    tmp_size += (buf)*256;
+    fread(&buf, 1, 1, finp);
+    tmp_size += (buf);
+
+    int size = tmp_size;
+
+    long long answer = 0;
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            unsigned int tmp_num = 0;
+            fread(&buf, 1, 1, finp);
+            tmp_num += (buf)*256*256*256;
+            fread(&buf, 1, 1, finp);
+            tmp_num += (buf)*256*256;
+            fread(&buf, 1, 1, finp);
+            tmp_num += (buf)*256;
+            fread(&buf, 1, 1, finp);
+            tmp_num += (buf);
+            if (i == j) {
+                int num = tmp_num;
+                answer += num;
+            }
+        }
+    }
+    for (int i = 0; i < 8; i++) {
+        unsigned char cur_answer = (answer)>>(8*(8-i-1));
+        fwrite(&cur_answer, 1, 1, fout);
+    }
+
+    fclose(finp);
+    fclose(fout);
+    return 0;
+}
