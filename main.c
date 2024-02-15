@@ -1,110 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#define ABS(x) (x >= 0) ? (x) : -(x)
 
-// создаём структуру узла
-typedef struct node {
-    int data;
-    struct node *next;
-}LIST;
-
-// функция добавляет новый элемент в начало списка
-LIST* creater(LIST** top, int data) {
-    LIST* fresh = (LIST*)malloc(sizeof(LIST)); // выделяем память под элемент
-    fresh->data = data; // пихаеи данные
-    fresh->next = *top; // указатель на следующий элемент
-    *top = fresh; // теперь указатель на новый элемент другой
-}
-
-// функция вывода списка
-void print(LIST* top) {
-    LIST* ptr = top;
-    while (ptr) { // пока указатель на элемент структуры не равег NULL
-        printf("%d ", ptr->data);
-        ptr = ptr->next;
-    }
-}
-
-// функция разделения списка на 2 половины
-void split(LIST* full, LIST** first, LIST** sec) {
-    if (full == NULL || full->next == NULL) { // если длина 1 или 0, нечего разделять
-        *first = full;
-        *sec = NULL;
-        return;
-    }
-
-    LIST* slow = full; // подсписок из половины
-    LIST* fast = full->next; // подсписок из второй половины
-
-    while (fast != NULL) { // fast движется вдвое быстрее slow
-        fast = fast->next;
-        if (fast != NULL) {
-            slow = slow->next;
-            fast = fast->next;
-        }
-    }
-
-    // slow находится ровно перед серединой списка
-    *first = full; // записываем начало переписываем в первый список
-    *sec = slow->next; // середину записываем во второй
-    slow->next = NULL; // удаляем связь между списками
-
-}
-
-// функция ообъединения двух списков
-LIST* all(LIST* a, LIST* b) {
-    if (a == NULL) return b;
-    if (b == NULL) return a;
-
-    LIST* res = NULL; // создаём указатель на результат
-
-    if (a->data <= b->data) {
-        res = a;
-        res->next = all(a->next, b); // рекурсивно выбираем из двух списков меньший элемент
-    }
-
-    else {
-        res = b;
-        res->next = all(a, b->next);
-    }
-
-    return res;
-}
-
-// функция сортировки слиянием
-void sort(LIST** top) {
-    // если длина 1 или 0, нечего сортировать
-    if (*top == NULL || (*top)->next == NULL) {
-        return;
-    }
-
-    LIST* a, *b;
-
-    split(*top, &a, &b); // разделяем список на 2
-    // сортируем каждый список поочереди
-    sort(&a);
-    sort(&b);
-
-    *top = all(a, b); // объеденяем списки
-}
 
 int main()
 {
-    FILE* in = fopen("input.txt", "r");
-    FILE* out = fopen("output.txt", "w");
+    int n = 0, i = 0, j = 0, mn = 0;
+    double tem = 0, a, b;
 
-    int i = 0;
-    int tem = 0;
+    scanf("%d", &n);
+    double *mas;
+    mas = (int*)malloc(n * sizeof(double));
+    for (i = 0; i < n; i++) {
+        scanf("%lf", &mas[i]);
+    }
 
-    if (in == NULL) return 1;
-    if (out == NULL) return 1;
+    for (i = 0; i < n; i++) {
+        mn = i;
+        //printf("%d", mn);
 
-    fscanf(in, "%d", &tem);
-    printf("%d", tem);
+        for (j = i + 1; j < n; j++) {
+            a = ABS(mas[mn]);
+            b = ABS(mas[j]);
+            if (a < b)
+                mn = j;
+        }
+        tem = mas[mn];
+        mas[mn] = mas[i];
+        mas[i] = tem;
+        //printf("%lf", mas[i]);
+    }
 
-    i = 0;
-
-    fclose(in);
-    fclose(out);
-
+    for (i = 0; i < n; i++) {
+       printf("%lf\n", mas[i]);
+    }
+    free(mas);
     return 0;
 }
